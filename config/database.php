@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db = 'u687264317_dharmicdialog';
-$user = 'u687264317_dharmicdialog';
-$pass = 'Dharmic^dialogue@267%$';
+$db = 'u68cdialog';
+$user = 'u687264log';
+$pass = 'e@267%$';
 
 try {
     // Create a new PDO instance
