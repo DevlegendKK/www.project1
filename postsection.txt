@@ -1,0 +1,415 @@
+<style>.wp-block-group { box-sizing: border-box; } .wp-block-group.is-layout-constrained { position: relative; } /* Styles for groups with background */ .wp-block-group.has-background { padding: 1.25em 2.375em; } /* Styles for flex layout groups */ .wp-block-group.is-layout-flex { display: flex; flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; } /* Styles for the spacer block */ .wp-block-spacer { height: 50px; width: 0px; visibility: hidden; } /* Styles for the heading block */ .wp-block-heading { font-family: var(--iv-font-heading); font-size: 2.566rem; font-weight: 600; line-height: 1.15; } .wp-block-heading a { color: #333; text-decoration: none; } .wp-block-heading a:hover { text-decoration: underline; } /* Styles for the separator block */ .wp-block-separator { border: none; border-bottom: 2px solid; margin-left: auto; margin-right: auto; } .wp-block-separator.has-alpha-channel-opacity { opacity: 1;margin-top:0; } .wp-block-separator.is-style-wide { width: 100%; } /* Container-specific styles */ .wp-container-core-group-is-layout-5 { flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; } .wp-container-core-group-is-layout-6 > :where(:not(.alignleft):not(.alignright):not(.alignfull)) { max-width: 1130px; margin-left: auto !important; margin-right: auto !important; } .wp-container-core-group-is-layout-6 > .alignwide { max-width: 1130px; } .wp-container-core-group-is-layout-6 .alignfull { max-width: none; } .wp-container-content-5, .wp-container-content-6 { flex-basis: 20px; }</style>
+            <div class="wp-block-group is-layout-constrained wp-container-core-group-is-layout-6 wp-block-group-is-layout-constrained">
+                <div class="wp-block-group alignwide is-content-justification-left is-nowrap is-layout-flex wp-container-core-group-is-layout-5 wp-block-group-is-layout-flex">
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-5"></div>
+                    <h2 class="wp-block-heading" id="h-culture">
+                        <a href="/Philosophy/">Philosophy</a>
+                    </h2>
+                    <div style="" aria-hidden="true" class="wp-block-spacer wp-container-content-6"></div>
+                </div>
+                <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>
+            </div>
+
+
+            <div class="horizontal-article-card-section wrapper inner-wrapper">
+                <ul class="snippet-article home-bottom-article">
+                    
+                    <?php
+                    try {
+                        $stmt = $conn->prepare("SELECT * FROM post WHERE status = :status AND category = :category ORDER BY published_at DESC LIMIT 1, 3");
+                        $stmt->execute(['status' => 'true', 'category' => 'Philosophy']);
+                        
+                        // Fetch all posts
+                        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        foreach ($posts as $fetch_post) {
+                            $authorid = $fetch_post['author_id'];
+                            $time = date('d M Y', strtotime($fetch_post['published_at']));
+                            
+                            // Prepare and execute the query to fetch the author
+                            $author_stmt = $conn->prepare("SELECT * FROM author WHERE id = :authorid");
+                            $author_stmt->execute(['authorid' => $authorid]);
+                            
+                            // Fetch the author
+                            $fetch_author = $author_stmt->fetch(PDO::FETCH_ASSOC);
+                            ?>
+                            <li class="snippet-article_post">
+                                <div class="article-box snippet-article_content ">
+                                    <a href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>">
+                                        <img src="https://theindicvoice.com/assets/images/blog-post/<?php echo htmlspecialchars($fetch_post['featured_img']); ?>?auto=compress&#038;fm=png&#038;ixlib=php-3.3.1?crop=entropy&#038;auto=compress&#038;fit=crop&#038;h=605&#038;w=1440" alt="channel_image">
+                                    </a>
+                                    <p class="snippet-article_content-cat">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined - Psychology" href="/"> <?php echo htmlspecialchars($fetch_post['category']); ?> </a>
+                                    </p>
+                                    <h3 class="margin-bottom-none snippet-article_content-head">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined" href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>"> <?php echo htmlspecialchars($fetch_post['title']); ?> </a>
+                                    </h3>
+                                    <?php
+                                        // Limit the description to 10 words
+                                        $description = htmlspecialchars($fetch_post['description']);
+                                        $words = explode(' ', $description);
+                                        $limited_description = implode(' ', array_slice($words, 0, 10));
+                                    ?>
+                                    <p class="margin-top-none snippet-article_content-desc article-list_item-desc"><?php echo $limited_description; ?><?php if (count($words) > 10) echo '...'; ?></p>
+                                    <ul class="snippet-article_content-byline lg margin-bottom-none no-style">
+                                        <li>By <a href="/author/<?php echo htmlspecialchars($fetch_author['slug']); ?>"><?php echo htmlspecialchars($fetch_author['name']); ?></a> </li>
+                                        <li class="pull-right">
+                                            <time datetime="<?php echo htmlspecialchars($fetch_post['published_at']); ?>"> <?php echo $time; ?> </time>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                    ?>
+                </ul>
+            </div>
+            
+            
+            <div class="wp-block-group is-layout-constrained wp-container-core-group-is-layout-6 wp-block-group-is-layout-constrained">
+                <div class="wp-block-group alignwide is-content-justification-left is-nowrap is-layout-flex wp-container-core-group-is-layout-5 wp-block-group-is-layout-flex">
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-5"></div>
+                    <h2 class="wp-block-heading" id="h-culture">
+                        <a href="/Opinion/">Opinion</a>
+                    </h2>
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-6"></div>
+                </div>
+                <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>
+            </div>
+
+
+            <div class="horizontal-article-card-section wrapper inner-wrapper">
+                <ul class="snippet-article home-bottom-article">
+                    
+                    <?php
+                    try {
+                        $stmt = $conn->prepare("SELECT * FROM post WHERE status = :status AND category = :category ORDER BY published_at DESC LIMIT 1, 3");
+                        $stmt->execute(['status' => 'true', 'category' => 'Opinion']);
+                        
+                        // Fetch all posts
+                        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        foreach ($posts as $fetch_post) {
+                            $authorid = $fetch_post['author_id'];
+                            $time = date('d M Y', strtotime($fetch_post['published_at']));
+                            
+                            // Prepare and execute the query to fetch the author
+                            $author_stmt = $conn->prepare("SELECT * FROM author WHERE id = :authorid");
+                            $author_stmt->execute(['authorid' => $authorid]);
+                            
+                            // Fetch the author
+                            $fetch_author = $author_stmt->fetch(PDO::FETCH_ASSOC);
+                            ?>
+                            <li class="snippet-article_post">
+                                <div class="article-box snippet-article_content ">
+                                    <a href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>">
+                                        <img src="https://theindicvoice.com/assets/images/blog-post/<?php echo htmlspecialchars($fetch_post['featured_img']); ?>?auto=compress&#038;fm=png&#038;ixlib=php-3.3.1?crop=entropy&#038;auto=compress&#038;fit=crop&#038;h=605&#038;w=1440" alt="channel_image">
+                                    </a>
+                                    <p class="snippet-article_content-cat">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined - Psychology" href="/"> <?php echo htmlspecialchars($fetch_post['category']); ?> </a>
+                                    </p>
+                                    <h3 class="margin-bottom-none snippet-article_content-head">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined" href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>"> <?php echo htmlspecialchars($fetch_post['title']); ?> </a>
+                                    </h3>
+                                    <?php
+                                        // Limit the description to 10 words
+                                        $description = htmlspecialchars($fetch_post['description']);
+                                        $words = explode(' ', $description);
+                                        $limited_description = implode(' ', array_slice($words, 0, 10));
+                                    ?>
+                                    <p class="margin-top-none snippet-article_content-desc article-list_item-desc"><?php echo $limited_description; ?><?php if (count($words) > 10) echo '...'; ?></p>
+                                    <ul class="snippet-article_content-byline lg margin-bottom-none no-style">
+                                        <li>By <a href="/author/<?php echo htmlspecialchars($fetch_author['slug']); ?>"><?php echo htmlspecialchars($fetch_author['name']); ?></a> </li>
+                                        <li class="pull-right">
+                                            <time datetime="<?php echo htmlspecialchars($fetch_post['published_at']); ?>"> <?php echo $time; ?> </time>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                    ?>
+                </ul>
+            </div>
+            
+            
+            
+            <div class="wp-block-group is-layout-constrained wp-container-core-group-is-layout-6 wp-block-group-is-layout-constrained">
+                <div class="wp-block-group alignwide is-content-justification-left is-nowrap is-layout-flex wp-container-core-group-is-layout-5 wp-block-group-is-layout-flex">
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-5"></div>
+                    <h2 class="wp-block-heading" id="h-culture">
+                        <a href="/History/">History</a>
+                    </h2>
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-6"></div>
+                </div>
+                <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>
+            </div>
+
+
+            <div class="horizontal-article-card-section wrapper inner-wrapper">
+                <ul class="snippet-article home-bottom-article">
+                    
+                    <?php
+                    try {
+                        $stmt = $conn->prepare("SELECT * FROM post WHERE status = :status AND category = :category ORDER BY published_at DESC LIMIT 0, 3");
+                        $stmt->execute(['status' => 'true', 'category' => 'History']);
+                        
+                        // Fetch all posts
+                        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        foreach ($posts as $fetch_post) {
+                            $authorid = $fetch_post['author_id'];
+                            $time = date('d M Y', strtotime($fetch_post['published_at']));
+                            
+                            // Prepare and execute the query to fetch the author
+                            $author_stmt = $conn->prepare("SELECT * FROM author WHERE id = :authorid");
+                            $author_stmt->execute(['authorid' => $authorid]);
+                            
+                            // Fetch the author
+                            $fetch_author = $author_stmt->fetch(PDO::FETCH_ASSOC);
+                            ?>
+                            <li class="snippet-article_post">
+                                <div class="article-box snippet-article_content ">
+                                    <a href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>">
+                                        <img src="https://theindicvoice.com/assets/images/blog-post/<?php echo htmlspecialchars($fetch_post['featured_img']); ?>?auto=compress&#038;fm=png&#038;ixlib=php-3.3.1?crop=entropy&#038;auto=compress&#038;fit=crop&#038;h=605&#038;w=1440" alt="channel_image">
+                                    </a>
+                                    <p class="snippet-article_content-cat">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined - Psychology" href="/"> <?php echo htmlspecialchars($fetch_post['category']); ?> </a>
+                                    </p>
+                                    <h3 class="margin-bottom-none snippet-article_content-head">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined" href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>"> <?php echo htmlspecialchars($fetch_post['title']); ?> </a>
+                                    </h3>
+                                    <?php
+                                        // Limit the description to 10 words
+                                        $description = htmlspecialchars($fetch_post['description']);
+                                        $words = explode(' ', $description);
+                                        $limited_description = implode(' ', array_slice($words, 0, 10));
+                                    ?>
+                                    <p class="margin-top-none snippet-article_content-desc article-list_item-desc"><?php echo $limited_description; ?><?php if (count($words) > 10) echo '...'; ?></p>
+                                    <ul class="snippet-article_content-byline lg margin-bottom-none no-style">
+                                        <li>By <a href="/author/<?php echo htmlspecialchars($fetch_author['slug']); ?>"><?php echo htmlspecialchars($fetch_author['name']); ?></a> </li>
+                                        <li class="pull-right">
+                                            <time datetime="<?php echo htmlspecialchars($fetch_post['published_at']); ?>"> <?php echo $time; ?> </time>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                    ?>
+                </ul>
+            </div>
+            
+            
+            
+            <div class="wp-block-group is-layout-constrained wp-container-core-group-is-layout-6 wp-block-group-is-layout-constrained">
+                <div class="wp-block-group alignwide is-content-justification-left is-nowrap is-layout-flex wp-container-core-group-is-layout-5 wp-block-group-is-layout-flex">
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-5"></div>
+                    <h2 class="wp-block-heading" id="h-culture">
+                        <a href="/Politics/">Politics</a>
+                    </h2>
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-6"></div>
+                </div>
+                <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>
+            </div>
+            <div class="horizontal-article-card-section wrapper inner-wrapper">
+                <ul class="snippet-article home-bottom-article">
+                    
+                    <?php
+                    try {
+                        $stmt = $conn->prepare("SELECT * FROM post WHERE status = :status AND category = :category ORDER BY published_at DESC LIMIT 0, 3");
+                        $stmt->execute(['status' => 'true', 'category' => 'Politics']);
+                        
+                        // Fetch all posts
+                        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        foreach ($posts as $fetch_post) {
+                            $authorid = $fetch_post['author_id'];
+                            $time = date('d M Y', strtotime($fetch_post['published_at']));
+                            
+                            // Prepare and execute the query to fetch the author
+                            $author_stmt = $conn->prepare("SELECT * FROM author WHERE id = :authorid");
+                            $author_stmt->execute(['authorid' => $authorid]);
+                            
+                            // Fetch the author
+                            $fetch_author = $author_stmt->fetch(PDO::FETCH_ASSOC);
+                            ?>
+                            <li class="snippet-article_post">
+                                <div class="article-box snippet-article_content ">
+                                    <a href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>">
+                                        <img src="https://theindicvoice.com/assets/images/blog-post/<?php echo htmlspecialchars($fetch_post['featured_img']); ?>?auto=compress&#038;fm=png&#038;ixlib=php-3.3.1?crop=entropy&#038;auto=compress&#038;fit=crop&#038;h=605&#038;w=1440" alt="channel_image">
+                                    </a>
+                                    <p class="snippet-article_content-cat">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined - Psychology" href="/"> <?php echo htmlspecialchars($fetch_post['category']); ?> </a>
+                                    </p>
+                                    <h3 class="margin-bottom-none snippet-article_content-head">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined" href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>"> <?php echo htmlspecialchars($fetch_post['title']); ?> </a>
+                                    </h3>
+                                    <?php
+                                        // Limit the description to 10 words
+                                        $description = htmlspecialchars($fetch_post['description']);
+                                        $words = explode(' ', $description);
+                                        $limited_description = implode(' ', array_slice($words, 0, 10));
+                                    ?>
+                                    <p class="margin-top-none snippet-article_content-desc article-list_item-desc"><?php echo $limited_description; ?><?php if (count($words) > 10) echo '...'; ?></p>
+                                    <ul class="snippet-article_content-byline lg margin-bottom-none no-style">
+                                        <li>By <a href="/author/<?php echo htmlspecialchars($fetch_author['slug']); ?>"><?php echo htmlspecialchars($fetch_author['name']); ?></a> </li>
+                                        <li class="pull-right">
+                                            <time datetime="<?php echo htmlspecialchars($fetch_post['published_at']); ?>"> <?php echo $time; ?> </time>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                    ?>
+                </ul>
+            </div>
+
+
+            <div class="wp-block-group is-layout-constrained wp-container-core-group-is-layout-6 wp-block-group-is-layout-constrained">
+                <div class="wp-block-group alignwide is-content-justification-left is-nowrap is-layout-flex wp-container-core-group-is-layout-5 wp-block-group-is-layout-flex">
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-5"></div>
+                    <h2 class="wp-block-heading" id="h-Science">
+                        <a href="/Science/">Science</a>
+                    </h2>
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-6"></div>
+                </div>
+                <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>
+            </div>
+            <div class="horizontal-article-card-section wrapper inner-wrapper">
+                <ul class="snippet-article home-bottom-article">
+                    
+                    <?php
+                    try {
+                        $stmt = $conn->prepare("SELECT * FROM post WHERE status = :status AND category = :category ORDER BY published_at DESC LIMIT 0, 3");
+                        $stmt->execute(['status' => 'true', 'category' => 'Science']);
+                        
+                        // Fetch all posts
+                        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        foreach ($posts as $fetch_post) {
+                            $authorid = $fetch_post['author_id'];
+                            $time = date('d M Y', strtotime($fetch_post['published_at']));
+                            
+                            // Prepare and execute the query to fetch the author
+                            $author_stmt = $conn->prepare("SELECT * FROM author WHERE id = :authorid");
+                            $author_stmt->execute(['authorid' => $authorid]);
+                            
+                            // Fetch the author
+                            $fetch_author = $author_stmt->fetch(PDO::FETCH_ASSOC);
+                            ?>
+                            <li class="snippet-article_post">
+                                <div class="article-box snippet-article_content ">
+                                    <a href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>">
+                                        <img src="https://theindicvoice.com/assets/images/blog-post/<?php echo htmlspecialchars($fetch_post['featured_img']); ?>?auto=compress&#038;fm=png&#038;ixlib=php-3.3.1?crop=entropy&#038;auto=compress&#038;fit=crop&#038;h=605&#038;w=1440" alt="channel_image">
+                                    </a>
+                                    <p class="snippet-article_content-cat">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined - Psychology" href="/"> <?php echo htmlspecialchars($fetch_post['category']); ?> </a>
+                                    </p>
+                                    <h3 class="margin-bottom-none snippet-article_content-head">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined" href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>"> <?php echo htmlspecialchars($fetch_post['title']); ?> </a>
+                                    </h3>
+                                    <?php
+                                        // Limit the description to 10 words
+                                        $description = htmlspecialchars($fetch_post['description']);
+                                        $words = explode(' ', $description);
+                                        $limited_description = implode(' ', array_slice($words, 0, 10));
+                                    ?>
+                                    <p class="margin-top-none snippet-article_content-desc article-list_item-desc"><?php echo $limited_description; ?><?php if (count($words) > 10) echo '...'; ?></p>
+                                    <ul class="snippet-article_content-byline lg margin-bottom-none no-style">
+                                        <li>By <a href="/author/<?php echo htmlspecialchars($fetch_author['slug']); ?>"><?php echo htmlspecialchars($fetch_author['name']); ?></a> </li>
+                                        <li class="pull-right">
+                                            <time datetime="<?php echo htmlspecialchars($fetch_post['published_at']); ?>"> <?php echo $time; ?> </time>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                    ?>
+                </ul>
+            </div>
+
+
+            <div class="wp-block-group is-layout-constrained wp-container-core-group-is-layout-6 wp-block-group-is-layout-constrained">
+                <div class="wp-block-group alignwide is-content-justification-left is-nowrap is-layout-flex wp-container-core-group-is-layout-5 wp-block-group-is-layout-flex">
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-5"></div>
+                    <h2 class="wp-block-heading" id="h-Environment">
+                        <a href="/Environment/">Environment</a>
+                    </h2>
+                    <div style="height:50px;width:0px" aria-hidden="true" class="wp-block-spacer wp-container-content-6"></div>
+                </div>
+                <hr class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>
+            </div>
+            <div class="horizontal-article-card-section wrapper inner-wrapper">
+                <ul class="snippet-article home-bottom-article">
+                    
+                    <?php
+                    try {
+                        $stmt = $conn->prepare("SELECT * FROM post WHERE status = :status AND category = :category ORDER BY published_at DESC LIMIT 0, 3");
+                        $stmt->execute(['status' => 'true', 'category' => 'Environment']);
+                        
+                        // Fetch all posts
+                        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        foreach ($posts as $fetch_post) {
+                            $authorid = $fetch_post['author_id'];
+                            $time = date('d M Y', strtotime($fetch_post['published_at']));
+                            
+                            // Prepare and execute the query to fetch the author
+                            $author_stmt = $conn->prepare("SELECT * FROM author WHERE id = :authorid");
+                            $author_stmt->execute(['authorid' => $authorid]);
+                            
+                            // Fetch the author
+                            $fetch_author = $author_stmt->fetch(PDO::FETCH_ASSOC);
+                            ?>
+                            <li class="snippet-article_post">
+                                <div class="article-box snippet-article_content ">
+                                    <a href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>">
+                                        <img src="https://theindicvoice.com/assets/images/blog-post/<?php echo htmlspecialchars($fetch_post['featured_img']); ?>?auto=compress&#038;fm=png&#038;ixlib=php-3.3.1?crop=entropy&#038;auto=compress&#038;fit=crop&#038;h=605&#038;w=1440" alt="channel_image">
+                                    </a>
+                                    <p class="snippet-article_content-cat">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined - Psychology" href="/"> <?php echo htmlspecialchars($fetch_post['category']); ?> </a>
+                                    </p>
+                                    <h3 class="margin-bottom-none snippet-article_content-head">
+                                        <a data-ev-cat="page undefined" data-ev-act="article" data-ev-label="label undefined" href="/<?php echo htmlspecialchars($fetch_post['post_type']); ?>/<?php echo htmlspecialchars($fetch_post['slug']); ?>"> <?php echo htmlspecialchars($fetch_post['title']); ?> </a>
+                                    </h3>
+                                    <?php
+                                        // Limit the description to 10 words
+                                        $description = htmlspecialchars($fetch_post['description']);
+                                        $words = explode(' ', $description);
+                                        $limited_description = implode(' ', array_slice($words, 0, 10));
+                                    ?>
+                                    <p class="margin-top-none snippet-article_content-desc article-list_item-desc"><?php echo $limited_description; ?><?php if (count($words) > 10) echo '...'; ?></p>
+                                    <ul class="snippet-article_content-byline lg margin-bottom-none no-style">
+                                        <li>By <a href="/author/<?php echo htmlspecialchars($fetch_author['slug']); ?>"><?php echo htmlspecialchars($fetch_author['name']); ?></a> </li>
+                                        <li class="pull-right">
+                                            <time datetime="<?php echo htmlspecialchars($fetch_post['published_at']); ?>"> <?php echo $time; ?> </time>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
+                        }
+                    ?>
+                </ul>
+            </div>

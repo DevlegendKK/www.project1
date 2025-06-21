@@ -1,0 +1,30 @@
+# robots.txt file for https://www.theindicvoice.com
+
+# Explicitly allow Twitterbot to access images in /assets/images/
+User-agent: Twitterbot
+Allow: /assets/images/
+Disallow:
+
+# Allow all user agents to access the entire site, except specific folders
+User-agent: *
+Disallow: /private/
+Disallow: /cgi-bin/
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /old-page.html
+Disallow: /deprecated/
+
+# Allow specific bots to access everything
+User-agent: Googlebot
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+# Block a specific bot
+User-agent: BadBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://theindicvoice.com/sitemap.php
+Sitemap: http://www.theindicvoice.com/feed/
